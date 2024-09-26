@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send call</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+
+
+    <style>
+        body {
+           background-color:#fff"
+        }
+      
+        .container {
+          max-width: 960px;
+        }
+      
+        .card {
+    background-color: #ffffff; /* Ensures the card stands out against the gray background */
+    border-radius: 8px; /* Rounds the corners for a smoother look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 20px; /* Adds more padding inside the card */
+    margin-top: 20px; /* More space on the top */
+    border: none; /* Removes the default border */
+}
+
+.card-title {
+    color: #333; /* Darker color for better contrast */
+    font-size: 24px; /* Larger font size for the title */
+    font-weight: bold; /* Bold font weight for the title */
+    margin-bottom: 20px; /* More space below the title */
+}
+
+.form-group {
+    margin-bottom: 15px; /* More vertical space between form groups */
+}
+
+.input-group {
+    border-radius: 5px; /* Rounded corners for input groups */
+}
+
+.btn-primary {
+    background-color: #8906E6; /* A nice shade of teal */
+    border-color: #8906E6; /* Match the border with the background */
+    color: white; /* White text color for contrast */
+}
+
+.btn-primary:hover {
+    background-color: #fff; /* Darker shade of teal for hover */
+    border-color: #117a8b;
+    color:#CB6CE6 ;
+}
+
+.btn-danger {
+  background-color: #8906E6; /* A nice shade of teal */
+    border-color: #8906E6; /* Match the border with the background */
+    color: white; 
+}
+
+.btn-danger:hover {
+  background-color: #fff; /* Darker shade of teal for hover */
+    border-color: #117a8b;
+    color:#CB6CE6 ;
+}
+
+.btn {
+    font-size: 16px; /* Increase font size
+
+
+.alert {
+    border-radius: 5px; /* Rounded corners for alerts */
+    font-size: 14px; /* Appropriate font size for alert messages */
+}
+
+      
+        .table {
+          margin-top: 1rem;
+          background-color: white;
+        }
+      
+        .table thead th {
+          background-color: blue;
+          color: white;
+        }
+      
+        .table tbody tr:nth-child(even) { 
+          background-color: #f2f2f2;
+        }
+      
+        .form-row {
+          margin-top: 1rem;
+        }
+      
+        #phoneNumbers {
+          background-color: #fff;
+          border: 1px solid #ddd;
+          border-radius: .25rem;
+          padding: 1rem;
+          margin-top: 1rem;
+        }
+      
+        #selectAll {
+          cursor: pointer;
+        }
+      
+        .alert {
+          margin-top: 1rem;
+        }
+        .sidebar {
+    background-color: #8906E6; /* white background */
+    color: white; /* dark gray text */
+    min-height: 100vh;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* subtle shadow for depth */
+}
+
+.sidebar ul {
+    list-style: none; /* removes bullet points */
+    padding-left: 0; /* aligns links to the left */
+}
+
+.main{
+    color: white; /* dark gray links */
+    text-decoration: none;
+    display: flex;
+    align-items: center; /* vertically center text and icons */
+    padding: 12px 10px;
+    margin: 5px 0;
+    background-color: #8906E6; /* light gray background */
+    border-radius: 10px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar a:hover, .sidebar a.active {
+    background-color: #fff; /* slightly darker gray on hover */
+    color: #CB6CE6; /* blue color for text on hover */
+}
+
+
+.sidebar i {
+    margin-right: 10px; /* space between icon and text */
+    width: 20px; /* ensures icons are evenly spaced */
+}
+
+.sidebar .nav-link {
+    font-weight: 10px; /* makes the text bold */
+    font-size: 14px; /* appropriate text size for readability */
+}
+
+.sidebar-sticky {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ensure it takes full height of the sidebar */
+}
+
+.nav.flex-column {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.spacer {
+    flex-grow: 1; /* This will push the logout item to the bottom */
+}
+
+
+.sidebar-logo {
+  /* Centers the logo */
+     /* Adds some padding around the logo */
+    border-bottom: 1px solid #ddd; /* Optional: adds a separator between the logo and nav items */
+}
+
+.sidebar-logo img {
+    width: 80%; /* Adjusts the width of the logo to fit the sidebar */
+    height: auto; /* Keeps the aspect ratio of the image */
+   /* Extra space below the logo */
+}
+
+
+
+
+
+
+        /* This ensures that the main content is not hidden below the sidebar */
+      </style>
+      
+
+</head>
+<body>
+    <div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar position-fixed">
+          <div class="sidebar-sticky">
+              <!-- Logo at the top of the sidebar -->
+              <div class="sidebar-logo">
+                <span class="logo" href="{{ url_for('home') }}">
+                    <img src="static\images\icons\logo.png" alt="Company Logo">
+                </span>
+            </div>
+      
+              <ul class="nav flex-column mt-4">
+                  <li class="nav-item"><a class="nav-link main" href="{{ url_for('home') }}"><i class="fas fa-plus-square"></i> Create Campaign</a></li>
+                  <li class="nav-item"><a class="nav-link main" href="{{ url_for('campaign_details') }}"><i class="fas fa-list"></i> Campaign List</a></li>
+                  <li class="nav-item"><a class="nav-link main" href="{{ url_for('batch_details_index') }}"><i class="fas fa-info-circle"></i> Campaign Details</a></li>
+                  <li class="nav-item"><a class="nav-link main" href="{{ url_for('analyze') }}"><i class="fas fa-brain"></i> AI Analysis</a></li>
+                  <li class="nav-item"><a class="nav-link main active" href="{{ url_for('call_jump') }}"><i class="fas fa-plus-square"></i> Send Call</a></li>
+                  <li class="nav-item"><a class="nav-link main" href="{{ url_for('inbound_index') }}"><i class="fas fa-plus-square"></i>Inbound call</a></li>
+
+                  <li class="nav-item"><a class="nav-link main" href="{{ url_for('call_log') }}"><i class="fas fa-phone-alt"></i> Call logs</a></li>
+              </ul>
+      
+              <!-- Logout link at the bottom -->
+              <div class="mt-auto">
+                  <ul class="nav flex-column">
+                      <li class="nav-item"><a class="nav-link main" href="{{ url_for('login') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                  </ul>
+              </div>
+          </div>
+      </nav>
+      
+
+      
+      
+        
+
+    <div  class="col-md-9 ml-sm-auto col-lg-10 main-content" style= "background-color:#fff">
+        <div class="card-body">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }} mt-3">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+            <h2 class="card-title">Send Call</h2>
+            <form action="/send_call" method="post" class="mt-4">
+
+                <!-- <div class="form-group">
+                    <label for="label">Campaign Name</label>
+                    <input type="text" class="form-control" id="label" name="label" required>
+                </div> -->
+                
+                <div class="form-group">
+                    <label for="label">Phone number</label>
+                    <input type="text" class="form-control" id="label" name="phone_number" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="label">Agent Creation</label><br>
+                    <button type="button" class="btn btn-primary" id="createAgentButton" data-toggle="modal" data-target="#createAgentModal">
+                        <i class="fas fa-robot"></i> Create Agent
+                    </button>
+                    <p class="mt-2" style="color: #8906E6; font-style: italic;">
+                        Click the "Create Agent" button to input the necessary details for creating a new agent. Ensure all fields are filled out accurately.
+                    </p>
+                    <ul style="color: #8906E6; list-style-type: disc; padding-left: 20px;">
+                        <li>Fill in the agent's full name and role.</li>
+                        <li>Provide the company's name and a brief description of its business.</li>
+                        <li>List the core values that define your company culture.</li>
+                        <li>Specify the purpose of the conversation and the first sentence.</li>
+                    </ul>
+                </div>
+
+
+                  
+
+                <div class="modal fade" id="createAgentModal" tabindex="-1" aria-labelledby="createAgentModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="createAgentModalLabel">Create Agent</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <form>
+                            <div class="form-group">
+                              <label for="agentName">Agent Name</label>
+                              <input type="text" class="form-control" id="agentName" placeholder="Enter the full name of the agent handling the call." name="agent_name" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="agentRole">Agent Role</label>
+                              <input type="text" class="form-control" id="agentRole" placeholder="Specify the role or position of the agent within the company." name="salesperson_role" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="companyName">Company Name</label>
+                              <input type="text" class="form-control" id="companyName" placeholder="Enter company name." name="company_name" required>
+                            </div>
+                            <div class="form-group">
+                              <label for="companyBusiness">Company Business</label>
+                              <textarea class="form-control" id="companyBusiness" style="height: 150px;" placeholder="Describe the main business activities of your company." name="company_business" required></textarea>
+                            </div>
+                            <div class="form-group">
+                              <label for="companyValues">Company Values</label>
+                              <textarea class="form-control" id="companyValues" style="height: 150px;" placeholder="List the core values that define your company culture." name="company_values" required></textarea>
+                            </div>
+                            <div class="form-group">
+                              <label for="conversationPurpose">Conversation Purpose</label>
+                              <textarea class="form-control" id="conversationPurpose" style="height: 150px;" placeholder="Explain the purpose of this conversation." name="conversation_purpose" required></textarea>
+                            </div>
+                            <div class="form-group">
+                              <label for="firstSentence">First Sentence</label>
+                              <input type="text" class="form-control" id="firstSentence" placeholder="Enter the first sentence of the conversation." name="first_sentence" required>
+                            </div>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+            <div class="form-group">
+              <label for="voiceSelect">Language</label>
+              <select class="form-control" id="voiceSelect" name="lang">
+                <option value="ENG"><Map></Map>English</option>
+                  <option value="GER">German</option>
+\
+              </select>
+          </div>
+
+
+                
+                <!-- <div class="form-group">
+                    <label for="basePrompt">Task</label>
+                    <textarea style="height: 250px;" type="text" placeholder="Write a task......" class="form-control" id="basePrompt" name="base_prompt" required></textarea>
+                </div> -->
+
+                <div class="form-group">
+                    <label for="voiceSelect">Voice Selection</label>
+                    <select class="form-control" id="voiceSelect" name="voice">
+                      <option value="ac9e8df3-dfd0-44a0-9cc6-0ecfbdcc6bf1"><Map></Map>Jorg</option>
+                        <option value="2f9fdbc7-4bf2-4792-8a18-21ce3c93978f">Maya</option>
+                        <option value="90295ec4-f0fe-4783-ab33-8b997ddc3ae4">Mason</option>
+                        <option value="37b3f1c8-a01e-4d70-b251-294733f08371">Ryan</option>
+                        <option value="bbeabae6-ec8d-444f-92ad-c8e620d3de8d">Tina</option>
+                        <option value="1d054475-3908-4f64-9158-9d3911fe9597">Adriana</option>
+                        <option value="a3d43393-dacb-43d3-91d7-b4cb913a5908">Matt</option>
+                        <option value="e1289219-0ea2-4f22-a994-c542c2a48a0f">Alexa</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="label">Transfer Call Number</label>
+                    <input type="text" class="form-control" id="label" name="number" required>
+                </div>
+
+                <!-- <div class="form-group">
+                    <label for="csvFile">Upload Contacts</label>
+                    <input type="file" class="form-control-file" id="csvFile" accept=".csv">
+                </div>
+
+                <div class="form-group">
+                    <label for="newContactName">New Contact Name</label>
+                    <input type="text" class="form-control" id="newContactName" name="new_contact_name" placeholder="Enter new contact name">
+                </div>
+                <div class="form-group">
+                    <label for="newContactNumber">New Contact Phone Number</label>
+                    <input type="text" class="form-control" id="newContactNumber" name="new_contact_number" placeholder="Enter new contact phone number">
+                </div>
+                
+                <button type="button" class="btn btn-primary" onclick="addContact()">Add Contact</button><br><br> -->
+                
+
+           
+                <!-- <div class="form-group" id="phoneNumbers" style="margin-top: 20px;"></div> -->
+                
+                <button type="submit" class="btn btn-primary">Send call</button>
+                <!-- Inside the forEach loop where you generate rows -->
+                <!-- <button type="button" class="btn btn-danger" onclick="stopCampaign()">Stop Campaign</button> -->
+
+            </form>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+function addContact() {
+        const name = document.getElementById('newContactName').value;
+        const phone = document.getElementById('newContactNumber').value;
+
+        // Validate the inputs
+        if (!name || !phone) {
+            alert('Please fill in both name and phone number fields.');
+            return;
+        }
+
+        // Clear the inputs
+        document.getElementById('newContactName').value = '';
+        document.getElementById('newContactNumber').value = '';
+
+        // Get the table body and create a new row
+        const tableBody = document.querySelector("#phoneNumbers table tbody");
+        const row = tableBody.insertRow();
+        const cell1 = row.insertCell(0);
+        const cell2 = row.insertCell(1);
+        const cell3 = row.insertCell(2);
+        const cell4 = row.insertCell(3);
+        const cell5 = row.insertCell(4);
+
+        // Adding row number
+        cell1.innerHTML = tableBody.rows.length;
+
+        // Adding name
+        cell2.innerHTML = name;
+
+        // Adding phone number
+        cell3.innerHTML = phone;
+
+        // Adding actions (edit and delete buttons)
+// Adding actions (edit and delete buttons)
+    cell4.innerHTML = `<button class="btn btn-primary btn-sm" onclick="editContact(this)">Edit</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteContact(this)">Delete</button>`;
+
+
+        // Adding checkbox
+        cell5.innerHTML = `<input type="checkbox" name="selected_phones" value="${phone}" />`;
+    }
+
+    function editContact(button) {
+        const row = button.closest('tr');
+        const name = row.cells[1].innerHTML;
+        const phone = row.cells[2].innerHTML;
+
+        // Prompt the user to edit the name and phone number
+        const newName = prompt('Enter new name:', name);
+        const newPhone = prompt('Enter new phone number:', phone);
+
+        // Update the table cell values if the user provided new values
+        if (newName && newPhone) {
+            row.cells[1].innerHTML = newName;
+            row.cells[2].innerHTML = newPhone;
+        }
+    }
+
+    function deleteContact(button) {
+        const row = button.closest('tr');
+        row.remove(); // Remove the entire row from the table
+    }
+    
+    document.getElementById('csvFile').addEventListener('change', function(event) {
+    Papa.parse(event.target.files[0], {
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+            const phoneNumbersDiv = document.getElementById('phoneNumbers');
+            phoneNumbersDiv.innerHTML = ''; // Clear previous entries
+            let table = `<table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Phone Number</th>
+                                    <th>Actions</th>
+                                    <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)" /></th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+            results.data.forEach((row, index) => {
+                const keys = Object.keys(row);
+                const name = row[keys[0]]; 
+                const phoneNumber = row[keys[1]]; 
+                if (name && phoneNumber) {
+                    table += `<tr>
+                                <td>${index + 1}</td>
+                                <td>${name}</td>
+                                <td>${phoneNumber}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm">Edit</button>
+                                    <button class="btn btn-danger btn-sm">Delete</button>
+                                </td>
+                                <td><input type="checkbox" name="selected_phones" value="${phoneNumber}" /></td>
+                              </tr>`;
+                }
+            });
+            table += `</tbody></table>`;
+            phoneNumbersDiv.innerHTML = table;
+        }
+    });
+});
+
+function toggleSelectAll(source) {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"][name="selected_phones"]');
+    for (let checkbox of checkboxes) {
+        checkbox.checked = source.checked;
+    }
+}
+
+
+
+
+
+function stopCampaign() {
+    // Make a POST request to the server to stop the campaign
+    fetch('/stop_campaign', {
+        method: 'POST',
+        // Add any needed headers
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if(response.ok) {
+            return response.json(); // or response.text() if the response is not JSON
+        }
+        throw new Error('Network response was not ok.');
+    })
+    .then(data => {
+        console.log(data.message); // Assuming the response contains a 'message'
+        window.location.reload(); // Reload the page to see the flash message
+    })
+    .catch(error => console.error('There has been a problem with your fetch operation:', error));
+}
+    </script>
+    
+
+</body>
+</html>

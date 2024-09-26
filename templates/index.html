@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Campaign</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+    <style>
+        body {
+            background-color: white;
+        }
+
+        .container {
+            max-width: 960px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+            border: none;
+        }
+
+        .card-title {
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            border-radius: 5px;
+        }
+
+        .btn-primary,
+        .btn-danger {
+            background-color: #77CE18;
+            border-color: #D8FF9F;
+            color: white;
+            font-size: small;
+        }
+
+        .btn-primary:hover,
+        .btn-danger:hover {
+            background-color: #D8FF9F;
+            color: black;
+            border-color: #77CE18;
+
+        }
+
+        .btn {
+            font-size: 16px;
+        }
+
+        .alert {
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .table {
+            margin-top: 1rem;
+            background-color: white;
+        }
+
+        .table thead th {
+            background-color: #E8F1FF;
+            color: white;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .form-row {
+            margin-top: 1rem;
+        }
+
+        #phoneNumbers {
+            background-color: #E8F1FF;
+            border: 1px solid #E8F1FF;
+            border-radius: .25rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        #selectAll {
+            cursor: pointer;
+            background-color: #E8F1FF;
+            color: white;
+        }
+
+        .alert {
+            margin-top: 1rem;
+        }
+
+        .sidebar {
+            background-color: #E8F1FF;
+            color: white;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .main {
+            color:  black;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            background-color: #E8F1FF;
+            border-radius: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #77CE18;
+            color: white;
+        }
+
+        .sidebar i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        .sidebar .nav-link {
+            font-weight: 10px;
+            font-size: 12px;
+        }
+
+        .sidebar-sticky {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .nav.flex-column {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .spacer {
+            flex-grow: 1;
+        }
+
+        /* .sidebar-logo {
+            border-bottom: 1px solid #ddd;
+        } */
+
+        .sidebar-logo img {
+            width: 80%;
+            height: auto;
+        }
+
+
+
+
+        .delete-icon {
+            color: red;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+        }
+
+        .modal-header {
+            background-color: #E8F1FF;
+            color: black;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        .modal-footer {
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-group-item span {
+            cursor: pointer;
+        }
+
+        .modal-body ul {
+            padding-left: 0;
+        }
+
+        .settings-header {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: -20px;
+}
+
+.arrow {
+    margin-right: 4px; /* Adjusts spacing between arrow and text */
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar position-fixed">
+                <div class="sidebar-sticky">
+                    <div class="sidebar-logo mt-3">
+                            <img src="static/images/webspikes_logo.png" alt="Company Logo">
+                    </div>
+                    <ul class="nav flex-column mt-4">
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('dashboard') }}"><i
+                            class="fas fa-table"></i> Dashboard</a></li><i class="fa-solid fa-gauge-simple-high"></i>
+                        <li class="nav-item"><a class="nav-link main active" href="{{ url_for('home') }}"><i
+                                    class="fas fa-plus-square"></i> Create Campaign</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('campaign_details') }}"><i
+                                    class="fas fa-list"></i> Campaign List</a></li>
+                        <!-- <li class="nav-item"><a class="nav-link main" href="{{ url_for('batch_details_index') }}"><i
+                                    class="fas fa-info-circle"></i> Campaign Details</a></li> -->
+                        <!-- <li class="nav-item"><a class="nav-link main" href="{{ url_for('analyze') }}"><i
+                                    class="fas fa-brain"></i> AI Analysis</a></li> -->
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('call_jump') }}"><i
+                                    class="fas fa-phone-alt"></i> Send Call</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('inbound_index') }}"><i
+                                    class="fas fa-phone-alt"></i> Inbound Call</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('call_log') }}"><i
+                                    class="fas fa-table"></i> Call Logs</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('chat_leads') }}"><i class="fas fa-chart-line"></i> Chatbot leads</a></li>
+                        <!-- <li class="nav-item"><a class="nav-link main" href="{{ url_for('appointments') }}"><i class="fas fa-calendar-check"></i> Appointments</a></li> -->
+
+                        <!-- <li class="nav-item"><a class="nav-link main" href="{{ url_for('list_vectors') }}"><i
+                                    class="fas fa-list"></i> Vector Details</a></li> -->
+
+
+
+
+                    </ul>
+                    <div class="mt-auto">
+                        <ul class="nav flex-column">
+                            <li class="nav-item"><a class="nav-link main" href="{{ url_for('login') }}"><i
+                                        class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="col-md-9 ml-sm-auto col-lg-10 main-content" style="margin-top: 0px;">
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} mt-3 flash-message">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    <div class="settings-header">
+                        <a href="#"></a>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="arrow" viewBox="0 0 24 24" width="35" height="60">
+                            <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
+                        </svg>
+                    </a>
+                        <h4>Create Campaign</h4>
+                    </div>
+                    
+                    <form id="sendCallForm" action="{{ url_for('home') }}" method="post" enctype="multipart/form-data"
+                        class="mt-4">
+
+                        <div class="form-group">
+                            <label for="label">Campaign Name</label>
+                            <input type="text" class="form-control" placeholder="Enter your campaign name." id="label"
+                                name="label" required>
+                        </div>
+
+                        <!-- <div class="form-group">
+                            <label for="Prompt">Prompt</label>
+                            <button type="button" class="btn btn-primary example-btn mb-1" style="font-size: small; position: relative; left: 875px;" onclick="fillExamplePrompt()">Prompt example</button>
+                            <textarea style="height: 315px;"placeholder="Describe the main business activities of your company." type="text" class="form-control" id="promptTextarea" name="prompt" required></textarea>
+                        </div> -->
+
+
+                        <!-- <div class="form-group">
+                            <label for="Prompt">Prompt</label>
+                            <button type="button" class="btn btn-primary example-btn mb-1"
+                                style="font-size: small; position: relative; left: 898px;"
+                                onclick="openPromptExampleModal()">My prompts</button>
+                            <textarea style="height: 315px;"
+                                placeholder="Describe the main business activities of your company." type="text"
+                                class="form-control" id="promptTextarea" name="prompt" required></textarea>
+                            <button style="font-size: small" type="button" class="btn btn-primary mt-2"
+                                id="savePromptButton" onclick="openSavePromptModal()">Save Prompt</button>
+                        </div> -->
+
+                        <div class="form-group">
+                            <label for="Prompt">Prompt</label>
+                            <button type="button" class="btn btn-primary example-btn mb-1"
+                                style="font-size: small; position: relative; left: 898px;"
+                                onclick="openPromptExampleModal()">My prompts</button>
+                            <textarea style="height: 315px;"
+                                placeholder="Describe the main business activities of your company." type="text"
+                                class="form-control" id="promptTextarea" name="prompt" required></textarea>
+                            <button style="font-size: small" type="button" class="btn btn-primary mt-2"
+                                id="savePromptButton" onclick="openSavePromptModal()">Save Prompt</button>
+                            <!-- <button type="button" style="font-size: small" class="btn btn-primary mt-2"
+                                onclick="openGeneratePromptModal()"><i
+                                class="fas fa-brain"></i></button> -->
+                        </div>
+
+                        <!-- Generate Prompt Modal -->
+                        <div class="modal" id="generatePromptModal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Generate Prompt</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <label for="generatePromptInput">Enter your topic:</label>
+                                        <input type="text" class="form-control" id="generatePromptInput"
+                                            placeholder="Enter topic">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" id="generateButton"
+                                            onclick="generatePrompt()">Generate</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Prompt Example Modal -->
+                        <div class="modal fade" id="promptExampleModal" tabindex="-1"
+                            aria-labelledby="promptExampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="promptExampleModalLabel">My Prompts</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul id="promptList" class="list-group">
+                                            <!-- Saved prompts will be dynamically added here -->
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Save Prompt Modal -->
+                        <div class="modal" id="savePromptModal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Save Prompt</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <label for="promptName">Prompt Name:</label>
+                                        <input type="text" class="form-control" id="promptName"
+                                            placeholder="Enter prompt name">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary"
+                                            onclick="savePrompt()">Save</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="first_sentence">First Sentence</label>
+                            <input type="text" class="form-control"
+                                placeholder="Enter the first sentence of the conversation." id="first_sentence"
+                                name="first_sentence" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="vectorIdUpdate">Knowledge Base (Vector)</label>
+                            <select class="form-control" id="vectorIdUpdate"
+                                placeholder="Select your Knowledge base (vector)" name="vector_id" required>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="lang">Language</label>
+                            <select class="form-control" id="lang" name="lang" required>
+                                <option value="en">English</option>
+                                <option value="en-US">English (US)</option>
+                                <option value="en-GB">English (UK)</option>
+                                <option value="en-AU">English (Australia)</option>
+                                <option value="en-NZ">English (New Zealand)</option>
+                                <option value="en-IN">English (India)</option>
+                                <option value="zh">Chinese (Mandarin, Simplified)</option>
+                                <option value="zh-CN">Chinese (Mandarin, Simplified, China)</option>
+                                <option value="zh-Hans">Chinese (Mandarin, Simplified, Hans)</option>
+                                <option value="zh-TW">Chinese (Mandarin, Traditional)</option>
+                                <option value="zh-Hant"> Chinese (Mandarin, Traditional, Hant)</option>
+                                <option value="es">Spanish</option>
+                                <option value="es-419">Spanish (Latin America)</option>
+                                <option value="fr">French</option>
+                                <option value="fr-CA">French (Canada)</option>
+                                <option value="de">German</option>
+                                <option value="el">Greek</option>
+                                <option value="hi">Hindi</option>
+                                <option value="hi-Latn">Hindi (Latin script)</option>
+                                <option value="ja">Japanese</option>
+                                <option value="ko">Korean</option>
+                                <option value="fr-CA">Korean (Korea)</option>
+                                <option value="pt">Portuguese</option>
+                                <option value="pt-BR">Portuguese (Brazil)</option>
+                                <option value="it">Italian</option>
+                                <option value="ru">Russian</option>
+                                <option value="sv">Swedish</option>
+                                <option value="sv-SE">Swedish (Sweden)</option>
+                                <option value="id">Indonesian</option>
+                                <option value="tr">Turkish</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="voice">Voice Selection</label>
+                            <select class="form-control" id="voice" name="voice" required>
+                                <option value="ac9e8df3-dfd0-44a0-9cc6-0ecfbdcc6bf1">Jorg (German)</option>
+                                <option value="d6270e19-323c-415a-b48c-c587e98750e2">Stefen (German)</option>
+                                <option value="8e11ef58-7c1f-457d-9a9a-0b0e1e9c96e3">Raju (Hindi)</option>
+                                <option value="6748f93b-0f64-4806-b379-364d56040dfc">Sarah (English)</option>
+                                <option value="e972ebc2-8791-45ca-a0db-382652ed7034">Jhon (English)</option>
+                                <option value="2f9fdbc7-4bf2-4792-8a18-21ce3c93978f">Maya</option>
+                                <option value="90295ec4-f0fe-4783-ab33-8b997ddc3ae4">Mason</option>
+                                <option value="37b3f1c8-a01e-4d70-b251-294733f08371">Ryan</option>
+                                <option value="bbeabae6-ec8d-444f-92ad-c8e620d3de8d">Tina</option>
+                                <option value="1d76869a-8e38-401f-a7b5-bb5891e40722">Matt</option>
+                                <option value="e1289219-0ea2-4f22-a994-c542c2a48a0f">Alexa</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="transfer_number">Transfer Call Number</label>
+                            <input type="text" class="form-control" id="transfer_number" name="number" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="csvFile">Upload Contacts</label>
+                            <input type="file" class="form-control-file" id="csvFile" name="csvFile" accept=".csv">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newContactName">New Contact Name</label>
+                            <input type="text" class="form-control" id="newContactName" name="new_contact_name"
+                                placeholder="Enter new contact name">
+                        </div>
+                        <div class="form-group">
+                            <label for="newContactNumber">New Contact Phone Number</label>
+                            <input type="text" class="form-control" id="newContactNumber" name="new_contact_number"
+                                placeholder="Enter new contact phone number">
+                        </div>
+
+                        <button style="font-size: small;" type="button" class="btn btn-primary"
+                            onclick="addContact()">Add Contact</button><br><br>
+
+                        <div class="form-group" id="phoneNumbers" style="margin-top: 20px;">
+                            {% if contacts %}
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Phone Number</th>
+                                        <th>Actions</th>
+                                        <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)" />
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for contact in contacts %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ contact.name }}</td>
+                                        <td>{{ contact.phone_number }}</td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm"
+                                                onclick="editContact(this)">Edit</button>
+                                            <button class="btn btn-danger btn-sm"
+                                                onclick="deleteContact(this)">Delete</button>
+                                        </td>
+                                        <td><input type="checkbox" name="selected_phones"
+                                                value="{{ contact.phone_number }}" /></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% endif %}
+                        </div>
+
+                        <button style="font-size: small;" type="submit" class="btn btn-primary">Launch Campaign</button>
+                        <button style="font-size: small;" type="button" class="btn btn-danger"
+                            onclick="stopCampaign()">Stop Campaign</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#saveAgentButton').click(function () {
+                var agentName = $('#agent_name_modal').val();
+                var agentRole = $('#salesperson_role_modal').val();
+                var companyName = $('#company_name_modal').val();
+                var companyBusiness = $('#company_business_modal').val();
+                var companyValues = $('#company_values_modal').val();
+                var conversationPurpose = $('#conversation_purpose_modal').val();
+                var firstSentence = $('#firstSentence_modal').val();
+
+                $('#agent_name').val(agentName);
+                $('#salesperson_role').val(agentRole);
+                $('#company_name').val(companyName);
+                $('#company_business').val(companyBusiness);
+                $('#company_values').val(companyValues);
+                $('#conversation_purpose').val(conversationPurpose);
+                $('#first_sentence').val(firstSentence);
+
+                $('#createAgentModal').modal('hide');
+            });
+
+            // Function to hide flash messages after 3 seconds
+            setTimeout(function () {
+                $('.flash-message').fadeOut('slow');
+            }, 3000); // 3 seconds
+        });
+
+        function addContact() {
+            const name = document.getElementById('newContactName').value;
+            const phone = document.getElementById('newContactNumber').value;
+
+            // Validate the inputs
+            if (!name || !phone) {
+                alert('Please fill in both name and phone number fields.');
+                return;
+            }
+
+            // Clear the inputs
+            document.getElementById('newContactName').value = '';
+            document.getElementById('newContactNumber').value = '';
+
+            // Get the table body and create a new row
+            const tableBody = document.querySelector("#phoneNumbers table tbody");
+            const row = tableBody.insertRow();
+            const cell1 = row.insertCell(0);
+            const cell2 = row.insertCell(1);
+            const cell3 = row.insertCell(2);
+            const cell4 = row.insertCell(3);
+            const cell5 = row.insertCell(4);
+
+            // Adding row number
+            cell1.innerHTML = tableBody.rows.length + 1;
+
+            // Adding name
+            cell2.innerHTML = name;
+
+            // Adding phone number
+            cell3.innerHTML = phone;
+
+            // Adding actions (edit and delete buttons)
+            cell4.innerHTML = `<button class="btn btn-primary btn-sm" onclick="editContact(this)">Edit</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteContact(this)">Delete</button>`;
+
+            // Adding checkbox
+            cell5.innerHTML = `<input type="checkbox" name="selected_phones" value="${phone}" />`;
+        }
+
+        function editContact(button) {
+            const row = button.closest('tr');
+            const name = row.cells[1].innerHTML;
+            const phone = row.cells[2].innerHTML;
+
+            // Prompt the user to edit the name and phone number
+            const newName = prompt('Enter new name:', name);
+            const newPhone = prompt('Enter new phone number:', phone);
+
+            // Update the table cell values if the user provided new values
+            if (newName && newPhone) {
+                row.cells[1].innerHTML = newName;
+                row.cells[2].innerHTML = newPhone;
+            }
+        }
+
+        function deleteContact(button) {
+            const row = button.closest('tr');
+            row.remove(); // Remove the entire row from the table
+        }
+
+        document.getElementById('csvFile').addEventListener('change', function (event) {
+            Papa.parse(event.target.files[0], {
+                header: true,
+                skipEmptyLines: true,
+                complete: function (results) {
+                    const phoneNumbersDiv = document.getElementById('phoneNumbers');
+                    phoneNumbersDiv.innerHTML = ''; // Clear previous entries
+                    let table = `<table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Phone Number</th>
+                                    <th>Actions</th>
+                                    <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)" /></th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+                    results.data.forEach((row, index) => {
+                        const keys = Object.keys(row);
+                        const name = row[keys[0]];
+                        const phoneNumber = row[keys[1]];
+                        if (name && phoneNumber) {
+                            table += `<tr>
+                                <td>${index + 1}</td>
+                                <td>${name}</td>
+                                <td>${phoneNumber}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm">Edit</button>
+                                    <button class="btn btn-danger btn-sm">Delete</button>
+                                </td>
+                                <td><input type="checkbox" name="selected_phones" value="${phoneNumber}" /></td>
+                              </tr>`;
+                        }
+                    });
+                    table += `</tbody></table>`;
+                    phoneNumbersDiv.innerHTML = table;
+                }
+            });
+        });
+
+        function toggleSelectAll(source) {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][name="selected_phones"]');
+            for (let checkbox of checkboxes) {
+                checkbox.checked = source.checked;
+            }
+        }
+
+        function stopCampaign() {
+            // Make a POST request to the server to stop the campaign
+            fetch('/stop_campaign', {
+                method: 'POST',
+                // Add any needed headers
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json(); // or response.text() if the response is not JSON
+                    }
+                    throw new Error('Network response was not ok.');
+                })
+                .then(data => {
+                    console.log(data.message); // Assuming the response contains a 'message'
+                    window.location.reload(); // Reload the page to see the flash message
+                })
+                .catch(error => console.error('There has been a problem with your fetch operation:', error));
+        }
+
+
+        
+
+        // Fetch existing vectors and populate the dropdown for updating vectors
+        fetch('/get_vectors')
+            .then(response => response.json())
+            .then(data => {
+                const vectorSelectUpdate = document.getElementById('vectorIdUpdate');
+                data.forEach(vector => {
+                    const optionUpdate = document.createElement('option');
+                    optionUpdate.value = vector.vector_id; // Adjust according to your vector object structure
+                    optionUpdate.textContent = vector.name; // Adjust according to your vector object structure
+                    vectorSelectUpdate.appendChild(optionUpdate);
+                });
+            })
+            .catch(error => console.error('Error fetching vectors:', error));
+
+
+
+        function openSavePromptModal() {
+            $('#savePromptModal').modal('show');
+        }
+
+        function savePrompt() {
+            const prompt = document.getElementById('promptTextarea').value;
+            const promptName = document.getElementById('promptName').value;
+
+            if (prompt && promptName) {
+                const promptData = {
+                    name: promptName,
+                    prompt: prompt
+                };
+
+                fetch('/save_prompt', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(promptData),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        $('#savePromptModal').modal('hide');
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            } else {
+                alert("Please enter both prompt and name.");
+            }
+        }
+
+        function openPromptExampleModal() {
+            fetch('/get_prompts', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const promptList = document.getElementById('promptList');
+                    promptList.innerHTML = '';
+                    data.prompts.forEach(prompt => {
+                        const listItem = document.createElement('li');
+                        listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                        listItem.innerHTML = `
+                            <span onclick="fillPrompt('${prompt.name}')">${prompt.name}</span>
+                            <span class="delete-icon" onclick="deletePrompt('${prompt.name}')">&times;</span>
+                        `;
+                        promptList.appendChild(listItem);
+                    });
+                    $('#promptExampleModal').modal('show');
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function fillPrompt(promptName) {
+            fetch('/get_prompt', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: promptName }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('promptTextarea').value = data.prompt;
+                    $('#promptExampleModal').modal('hide');
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function deletePrompt(promptName) {
+            fetch('/delete_prompt', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: promptName }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Deleted:', data);
+                    openPromptExampleModal();  // Refresh the prompt list
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function handleSendCallClick() {
+            // Ignore the Prompt Name input when sending a call
+            document.getElementById('promptName').removeAttribute('required');
+        }
+
+
+        function openGeneratePromptModal() {
+            $('#generatePromptModal').modal('show');
+        }
+
+        function generatePrompt() {
+            const topic = document.getElementById('generatePromptInput').value;
+            const generateButton = document.getElementById('generateButton');
+
+            if (topic.trim() === "") {
+                alert("Please enter a topic.");
+                return;
+            }
+
+            // Show spinner on the button
+            generateButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generating...';
+            generateButton.disabled = true;
+
+            fetch('/generate-prompt', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ topic: topic })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('promptTextarea').value = data.prompt;
+                    generateButton.innerHTML = 'Generate';
+                    generateButton.disabled = false;
+                    $('#generatePromptModal').modal('hide');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    generateButton.innerHTML = 'Generate';
+                    generateButton.disabled = false;
+                });
+        }
+    </script>
+</body>
+
+</html>

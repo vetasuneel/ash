@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Admin Panel</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="static/vendor/bootstrap/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #007bff;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        #balance-div {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #28a745;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+        }
+
+        #success-message {
+            text-align: center;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Admin Panel</h1>
+        <form action="{{ url_for('admin') }}" method="POST">
+            <div class="form-group">
+                <label for="new_username">New Username:</label>
+                <input type="text" class="form-control" id="new_username" name="new_username" placeholder="Enter new username" required>
+            </div>
+            <div class="form-group">
+                <label for="new_password">New Password:</label>
+                <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Enter new password" required>
+            </div>
+            <div class="form-group">
+                <label for="new_api_key">New API Key:</label>
+                <input type="text" class="form-control" id="new_api_key" name="new_api_key" placeholder="Enter new API key" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </form>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div id="success-message" class="alert alert-success" role="alert">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        <div id="balance-div">Loading...</div>
+    </div>
+
+    <script src="static/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        // JavaScript to remove the success message after 2 seconds
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const successMessage = document.getElementById('success-message');
+            if (successMessage) {
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 2000);
+            }
+        });
+
+        fetch('/balance')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('balance-div').innerText = `Current Balance: ${data.current_balance}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('balance-div').innerText = 'Failed to load balance';
+            });
+    </script>
+</body>
+
+</html>

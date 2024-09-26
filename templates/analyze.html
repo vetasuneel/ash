@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyze</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        body {
+            background-color: white;
+        }
+      
+        .container {
+            max-width: 960px;
+        }
+      
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+            border: none;
+        }
+      
+        .card-title {
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+      
+        .form-group {
+            margin-bottom: 15px;
+        }
+      
+        .input-group {
+            border-radius: 5px;
+        }
+      
+        .btn-primary,
+        .btn-danger {
+            background-color: #8906E6;
+            border-color: #8906E6;
+            color: white;
+        }
+      
+        .btn-primary:hover,
+        .btn-danger:hover {
+            background-color: #fff;
+            border-color: #117a8b;
+            color: #CB6CE6;
+        }
+      
+        .btn {
+            font-size: 16px;
+        }
+      
+        .alert {
+            border-radius: 5px;
+            font-size: 14px;
+        }
+      
+        .table {
+            margin-top: 1rem;
+            background-color: white;
+        }
+      
+        .table thead th {
+            background-color: #8906E6;
+            color: white;
+        }
+      
+        .table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+      
+        .form-row {
+            margin-top: 1rem;
+        }
+      
+        #phoneNumbers {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: .25rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+      
+        #selectAll {
+            cursor: pointer;
+            background-color: #8906E6;
+            color: white;
+        }
+      
+        .alert {
+            margin-top: 1rem;
+        }
+      
+        .sidebar {
+            background-color: #8906E6;
+            color: white;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+      
+        .sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+      
+        .main {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            background-color: #8906E6;
+            border-radius: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+      
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #fff;
+            color: #CB6CE6;
+        }
+      
+        .sidebar i {
+            margin-right: 10px;
+            width: 20px;
+        }
+      
+        .sidebar .nav-link {
+            font-weight: 10px;
+            font-size: 12px;
+        }
+      
+        .sidebar-sticky {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+      
+        .nav.flex-column {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+      
+        .spacer {
+            flex-grow: 1;
+        }
+      
+        .sidebar-logo {
+            border-bottom: 1px solid #ddd;
+        }
+      
+        .sidebar-logo img {
+            width: 80%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar position-fixed">
+                <div class="sidebar-sticky">
+                    <!-- Logo at the top of the sidebar -->
+                    <div class="sidebar-logo">
+                        <span class="logo" href="{{ url_for('home') }}">
+                            <img src="static/images/icons/logo.png" alt="Company Logo">
+
+                        </span>
+                    </div>
+
+                    <ul class="nav flex-column mt-4">
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('home') }}"><i
+                                    class="fas fa-plus-square"></i> Create Campaign</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('campaign_details') }}"><i
+                                    class="fas fa-list"></i> Campaign List</a></li>
+                        <li class="nav-item"><a class="nav-link main"
+                                href="{{ url_for('batch_details_index') }}"><i class="fas fa-info-circle"></i> Campaign
+                                Details</a></li>
+                        <!-- <li class="nav-item"><a class="nav-link main active" href="{{ url_for('analyze') }}"><i
+                                    class="fas fa-brain"></i> AI Analysis</a></li> -->
+                                    <li class="nav-item"><a class="nav-link main" href="{{ url_for('call_jump') }}"><i class="fas fa-phone-alt"></i> Send Call</a></li>
+                                    <li class="nav-item"><a class="nav-link main" href="{{ url_for('inbound_index') }}"><i class="fas fa-phone-alt"></i> Inbound call</a></li>
+                    
+                                    <li class="nav-item"><a class="nav-link main" href="{{ url_for('call_log') }}"><i class="fas fa-table"></i> Call logs</a></li>
+                                    <li class="nav-item"><a class="nav-link main" href="{{ url_for('vector_index') }}"><i class="fas fa-plus"></i> Create Vector </a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('vector_update') }}"><i class="fas fa-pen"></i> Update Vector</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('list_vectors') }}"><i class="fas fa-list"></i> Vector Details</a></li>
+
+
+
+                    </ul>
+
+                    <!-- Logout link at the bottom -->
+                    <div class="mt-auto">
+                        <ul class="nav flex-column">
+                            <li class="nav-item"><a class="nav-link main" href="{{ url_for('login') }}"><i
+                                        class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+                      
+            
+        
+                <div class="col-md-9 ml-sm-auto col-lg-10 main-content">
+                    <h2 class="card-title mt-4">Analyze Campaign</h2>
+                    <form id="dataForm">
+                        <div class="form-group">
+                            <label for="batch">Select Campaign:</label>
+                            <select id="batch" class="form-control">
+                                <!-- Options will be dynamically filled -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="goal">Goal:</label>
+                            <input type="text" id="goal" class="form-control">
+                        </div>
+                        <div id="questionContainer" class="form-group">
+                            <label for="question1">Question 1:</label>
+                            <input type="text" id="question1" class="form-control">
+                        </div>
+                        <button type="button" id="addQuestionBtn" class="btn add">Add Question</button>
+                        <button type="button" id="submitBtn" class="btn btn-primary">Analyze</button>
+                    </form>
+                    <div id="responseTable" class="mt-5"></div>
+                    <button type="button" id="clearBtn" class="btn btn-danger" style="display: none;">Clear</button>
+                </div>
+            </div>
+        </div>
+
+        
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#submitBtn').click(function(e) {
+            e.preventDefault();
+            var goal = $('#goal').val();
+            var questions = [];
+            for (var i = 1; i <= 4; i++) {
+                questions.push($('#question' + i).val()); // Collect questions
+            }
+            var batchId = $('#batch').val();
+    
+            $('#responseTable').html('<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Analyzing...</div>');
+    
+            $.ajax({
+                type: 'POST',
+                url: '/submit',
+                contentType: 'application/json',
+                data: JSON.stringify({ 'batch_id': batchId, 'goal': goal, 'questions': questions }),
+                success: function(response) {
+    $('#responseTable').empty();
+
+    if (response && response.length > 0) {
+        response.forEach(function(pair, index) {
+            var contentHtml = '<div class="qa-pair">' +
+                              '<p><strong>Question ' + (index + 1) + ':</strong> ' + pair.question + '</p>' +
+                              '<p><strong>Answer:</strong> ' + pair.answer + '</p>' +
+                              '</div>';
+            $('#responseTable').append(contentHtml);
+        });
+        $('#clearBtn').show(); // Show the clear button
+    } else {
+        $('#responseTable').html('<div class="alert alert-danger">No answers provided.</div>');
+    }
+},
+
+
+
+
+
+            });
+        });
+    });
+
+    $(document).ready(function() {
+    var questionCount = 1;
+    var maxQuestions = 4; // Maximum number of questions
+
+    $('#addQuestionBtn').click(function() {
+    if (questionCount < maxQuestions) {
+        questionCount++;
+        var newQuestionHtml = `
+            <div class="d-flex justify-content-between align-items-end mb-2">
+                <div class="flex-grow-1 mr-2">
+                    <label for="question${questionCount}">Question ${questionCount}:</label>
+                    <input type="text" id="question${questionCount}" name="question${questionCount}" class="form-control">
+                </div>
+            </div>`;
+        $('#questionContainer').append(newQuestionHtml);
+        } else {
+            // Optionally, alert the user or disable the add button
+            $(this).prop('disabled', true).addClass('btn-secondary').removeClass('btn-info');
+            alert('You have reached the maximum number of questions.');
+        }
+    });
+
+    // Your existing form submission handler
+});
+
+$('#clearBtn').click(function() {
+    // Reload the page
+    location.reload();
+});
+
+    </script>
+    
+    
+</body>
+</html>

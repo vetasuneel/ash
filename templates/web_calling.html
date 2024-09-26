@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        import { BlandWebClient } from 'bland-client-js-sdk';
+        
+        const agentId = '32543a35-f37a-4efc-aa40-a3e9ae4802ab';
+        const sessionToken = '3ed1d357-b37d-444a-bb4a-c3219a96ad88';
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            document.getElementById('btn').addEventListener('click', async () => {
+                const blandClient = new BlandWebClient(agentId, sessionToken);
+                await blandClient.initConversation({sampleRate: 44100});
+            });
+        });
+        
+        </script>
+    
+</body>
+</html>

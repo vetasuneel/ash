@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        body {
+            background-color: white;
+        }
+
+        .container {
+            max-width: 960px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+            border: none;
+        }
+
+        .card-title {
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            border-radius: 5px;
+        }
+
+        .btn-primary,
+        .btn-danger {
+            background-color: #77CE18;
+            border-color: #D8FF9F;
+            color: white;
+            font-size: small;
+        }
+
+        .btn-primary:hover,
+        .btn-danger:hover {
+            background-color: #D8FF9F;
+            color: black;
+            border-color: #77CE18;
+
+        }
+
+
+        .btn {
+            font-size: 16px;
+        }
+
+        .alert {
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .table {
+            margin-top: 1rem;
+            background-color: white;
+        }
+
+        .table thead th {
+            background-color: #E8F1FF;
+            color: black;
+        }
+        .table td, .table th {
+    text-align: center;
+    padding: 10px;
+}
+
+.table th:nth-child(2), .table td:nth-child(2) {
+    white-space: nowrap; /* Prevent wrapping */
+    width: auto; /* Adjust column width automatically */
+}
+
+.table tbody tr:hover {
+    background-color: #956FD6; /* Change background color on hover */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    color: white;
+}
+
+        .form-row {
+            margin-top: 1rem;
+        }
+
+        #phoneNumbers {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: .25rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        #selectAll {
+            cursor: pointer;
+            background-color: #8906E6;
+            color: white;
+        }
+
+        .alert {
+            margin-top: 1rem;
+        }
+
+        .sidebar {
+            background-color: #E8F1FF;
+            color: white;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .main {
+            color:  black;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            background-color: #E8F1FF;
+            border-radius: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #77CE18;
+            color: white;
+        }
+
+        .sidebar i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        .sidebar .nav-link {
+            font-weight: 10px;
+            font-size: 12px;
+        }
+
+        .sidebar-sticky {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .nav.flex-column {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .spacer {
+            flex-grow: 1;
+        }
+
+        /* .sidebar-logo {
+            border-bottom: 1px solid #ddd;
+        } */
+
+        .sidebar-logo img {
+            width: 80%;
+            height: auto;
+        }
+
+
+        .delete-icon {
+            color: red;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+        }
+
+        .modal-header {
+            background-color: #8906E6;
+            color: white;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .modal-footer {
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-group-item span {
+            cursor: pointer;
+        }
+
+        .modal-body ul {
+            padding-left: 0;
+        }
+
+        .settings-header {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-left: -20px;
+        }
+
+        .arrow {
+            margin-right: 4px; /* Adjusts spacing between arrow and text */
+        }
+
+        .base-prompt-container {
+            max-height: 3em; /* Limit to two lines */
+            overflow: hidden;
+            position: relative;
+        }
+
+        .base-prompt-container.expanded {
+            max-height: none; /* Remove the height limit when expanded */
+        }
+
+        .read-more {
+            display: block;
+            color: blue;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .base-prompt-container::after {
+            content: '...'; /* Ellipsis after 2 lines */
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            padding-left: 10px;
+            /* background: white; */
+        }
+
+        .base-prompt-container.expanded::after {
+            content: ''; /* Remove the ellipsis when expanded */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar position-fixed">
+                <div class="sidebar-sticky">
+                    <div class="sidebar-logo mt-3">
+                        <img src="static/images/webspikes_logo.png" alt="Company Logo">
+                    </div>
+                    <ul class="nav flex-column mt-4">
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('dashboard') }}"><i class="fas fa-table"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('home') }}"><i class="fas fa-plus-square"></i> Create Campaign</a></li>
+                        <li class="nav-item"><a class="nav-link main active" href="{{ url_for('campaign_details') }}"><i class="fas fa-list"></i> Campaign List</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('call_jump') }}"><i class="fas fa-phone-alt"></i> Send Call</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('inbound_index') }}"><i class="fas fa-phone-alt"></i> Inbound Call</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('call_log') }}"><i class="fas fa-table"></i> Call Logs</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('chat_leads') }}"><i class="fas fa-chart-line"></i> Chatbot leads</a></li>
+                        <!-- <li class="nav-item"><a class="nav-link main" href="{{ url_for('appointments') }}"><i class="fas fa-calendar-check"></i> Appointments</a></li> -->
+
+                    </ul>
+                    <div class="mt-auto">
+                        <ul class="nav flex-column">
+                            <li class="nav-item"><a class="nav-link main" href="{{ url_for('login') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <div class="col-md-9 ml-sm-auto col-lg-10 main-content" style="margin-top: 0px; padding-left: 35px;">
+                <div class="settings-header mt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="arrow" viewBox="0 0 24 24" width="35" height="60">
+                        <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
+                    </svg>
+                    <h4>Campaign List</h4>
+                </div>
+                <table class="table table-custom mt-4">
+                    <thead>
+                        <tr>
+                            <th>Campaign Name</th>
+                            <th>Created At</th>
+                            <th>Base Prompt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for batch in batches %}
+                        <tr class="clickable-row" data-batch-id="{{ batch.batch_id }}">
+                            <td>{{ batch.label }}</td>
+                            <td class="created-at">{{ batch.created_at }}</td>
+                            <td>
+                                <div class="base-prompt-container">
+                                    <span class="base-prompt-text" id="base-prompt-{{ batch.batch_id }}">{{ batch.base_prompt }}</span>
+                                    <span class="read-more" id="read-more-{{ batch.batch_id }}" onclick="toggleReadMore('{{ batch.batch_id }}')">Read more</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="4">No campaign details available.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to format date to "9/5/2024, 11:03 AM"
+            function formatDate(dateString) {
+                const options = {
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true
+                };
+                const date = new Date(dateString);
+                return date.toLocaleString('en-US', options);
+            }
+
+            // Find all cells with class 'created-at' and format their content
+            const dateCells = document.querySelectorAll('.created-at');
+            dateCells.forEach(function(cell) {
+                const formattedDate = formatDate(cell.textContent);
+                cell.textContent = formattedDate;
+            });
+
+            // Add click event listener to each table row
+            const rows = document.querySelectorAll('.clickable-row');
+            rows.forEach(row => {
+                row.addEventListener('click', function() {
+                    const batchId = this.dataset.batchId;
+                    window.location.href = `/batch_details/${batchId}`;
+                });
+            });
+        });
+
+        function toggleReadMore(batchId) {
+            const basePromptContainer = document.getElementById('base-prompt-' + batchId).parentNode;
+            const readMoreLink = document.getElementById('read-more-' + batchId);
+
+            if (basePromptContainer.classList.contains('expanded')) {
+                basePromptContainer.classList.remove('expanded');
+                readMoreLink.textContent = 'Read more';
+            } else {
+                basePromptContainer.classList.add('expanded');
+                readMoreLink.textContent = 'Read less';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcript</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            margin-top: 20px;
+            margin-left: 20px;
+        }
+        .call-details, .transcript {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .call-details {
+            width: 25%;
+            margin-right: 2%;
+        }
+        .transcript {
+            width: 73%;
+        }
+        h2 {
+            font-size: 24px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .message {
+            border-left: 4px solid #ddd;
+            margin-bottom: 15px;
+            padding-left: 15px;
+        }
+        .message strong {
+            font-size: 14px;
+            color: #555;
+        }
+        .timestamp {
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Call Details Section -->
+        <div class="call-details">
+            <h2>Call Details</h2>
+            <p><strong>Call ID:</strong> {{ call_data['call_id'] }}</p>
+            <p><strong>From:</strong> {{ call_data['from'] }}</p>
+            <p><strong>To:</strong> {{ call_data['to'] }}</p>
+            <p><strong>Call Length:</strong> {{ call_data['call_length'] }} minutes</p>
+            <p><strong>Created At:</strong> {{ call_data['created_at'] }}</p>
+            <p><strong>Status:</strong> {{ call_data['status'] }}</p>
+            <p><strong>Price:</strong> ${{ '%0.4f' | format(call_data['price']) }}</p>
+        </div>
+
+        <!-- Transcript Section -->
+        <div class="transcript">
+            <h2>Transcript</h2>
+            {% if call_data['transcripts'] %}
+                <!-- Iterate over the transcript messages -->
+                {% for message in call_data['transcripts'] %}
+                <div class="message">
+                    <strong>{{ message['user'] }}:</strong>
+                    <!-- Extract and format the time part from the datetime string -->
+                    <span class="timestamp">
+                        <script>
+                            // Parse the ISO 8601 date string
+                            var dateTimeStr = "{{ message['created_at'] }}";
+                            var dateTime = new Date(dateTimeStr);
+                            var timeStr = dateTime.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+                            document.write(timeStr);
+                        </script>
+                    </span>
+                    <p>{{ message['text'] }}</p>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No transcripts available.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+</body>
+</html>

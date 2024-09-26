@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Call</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+    <style>
+        body {
+            background-color: white;
+        }
+
+        .container {
+            max-width: 960px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+            border: none;
+        }
+
+        .card-title {
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            border-radius: 5px;
+        }
+
+        .btn-primary,
+        .btn-danger {
+            background-color: #77CE18;
+            border-color: #D8FF9F;
+            color: white;
+            font-size: small;
+        }
+
+        .btn-primary:hover,
+        .btn-danger:hover {
+            background-color: #D8FF9F;
+            color: black;
+            border-color: #77CE18;
+
+        }
+
+        .btn {
+            font-size: 16px;
+        }
+
+        .alert {
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .table {
+            margin-top: 1rem;
+            background-color: white;
+        }
+
+        .table thead th {
+            background-color: #E8F1FF;
+            color: white;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .form-row {
+            margin-top: 1rem;
+        }
+
+        #phoneNumbers {
+            background-color: #E8F1FF;
+            border: 1px solid #E8F1FF;
+            border-radius: .25rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        #selectAll {
+            cursor: pointer;
+            background-color: #E8F1FF;
+            color: white;
+        }
+
+        .alert {
+            margin-top: 1rem;
+        }
+
+        .sidebar {
+            background-color: #E8F1FF;
+            color: white;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .main {
+            color:  black;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            background-color: #E8F1FF;
+            border-radius: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #77CE18;
+            color: white;
+        }
+
+        .sidebar i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        .sidebar .nav-link {
+            font-weight: 10px;
+            font-size: 12px;
+        }
+
+        .sidebar-sticky {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .nav.flex-column {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .spacer {
+            flex-grow: 1;
+        }
+
+        /* .sidebar-logo {
+            border-bottom: 1px solid #ddd;
+        } */
+
+        .sidebar-logo img {
+            width: 80%;
+            height: auto;
+        }
+
+
+
+
+        .delete-icon {
+            color: red;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+        }
+
+        .modal-header {
+            background-color: #E8F1FF;
+            color: black;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        .modal-footer {
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-group-item span {
+            cursor: pointer;
+        }
+
+        .modal-body ul {
+            padding-left: 0;
+        }
+
+        .settings-header {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: -20px;
+}
+
+.arrow {
+    margin-right: 4px; /* Adjusts spacing between arrow and text */
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar position-fixed">
+                <div class="sidebar-sticky">
+                    <div class="sidebar-logo mt-3">
+                            <img src="static/images/webspikes_logo.png" alt="Company Logo">
+                    </div>
+                    <ul class="nav flex-column mt-4">
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('dashboard') }}"><i
+                            class="fas fa-table"></i> Dashboard</a></li><i class="fa-solid fa-gauge-simple-high"></i>
+                        <li class="nav-item"><a class="nav-link main " href="{{ url_for('home') }}"><i
+                                    class="fas fa-plus-square"></i> Create Campaign</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('campaign_details') }}"><i
+                                    class="fas fa-list"></i> Campaign List</a></li>
+                        <!-- <li class="nav-item"><a class="nav-link main" href="{{ url_for('batch_details_index') }}"><i
+                                    class="fas fa-info-circle"></i> Campaign Details</a></li> -->
+                        <!-- <li class="nav-item"><a class="nav-link main" href="{{ url_for('analyze') }}"><i
+                                    class="fas fa-brain"></i> AI Analysis</a></li> -->
+                        <li class="nav-item"><a class="nav-link main active" href="{{ url_for('call_jump') }}"><i
+                                    class="fas fa-phone-alt"></i> Send Call</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('inbound_index') }}"><i
+                                    class="fas fa-phone-alt"></i> Inbound Call</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('call_log') }}"><i
+                                    class="fas fa-table"></i> Call Logs</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('chat_leads') }}"><i class="fas fa-chart-line"></i> Chatbot leads</a></li>
+                        <!-- <li class="nav-item"><a class="nav-link main" href="{{ url_for('appointments') }}"><i class="fas fa-calendar-check"></i> Appointments</a></li> -->
+
+                        <!-- <li class="nav-item"><a class="nav-link main" href="{{ url_for('list_vectors') }}"><i
+                                    class="fas fa-list"></i> Vector Details</a></li> -->
+
+
+
+
+                    </ul>
+                    <div class="mt-auto">
+                        <ul class="nav flex-column">
+                            <li class="nav-item"><a class="nav-link main" href="{{ url_for('login') }}"><i
+                                        class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="col-md-9 ml-sm-auto col-lg-10 main-content">
+                <div class="card-body">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} mt-3 flash-message">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    <div class="settings-header">
+                        <a href="#"></a>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="arrow" viewBox="0 0 24 24" width="35" height="60">
+                            <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/>
+                        </svg>
+                    </a>
+                        <h4>Send Call</h4>
+                    </div>
+                    <form id="sendCallForm" action="{{ url_for('send_call') }}" method="post" class="mt-4">
+                        <div class="form-group">
+                            <label for="phone_number">Phone Number</label><br>
+                            <input type="tel" class="form-control" id="phone_number" name="phone_number" required>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="Prompt">Prompt</label>
+                            <button type="button" class="btn btn-primary example-btn mb-1"
+                                style="font-size: small; position: relative; left: 898px;"
+                                onclick="openPromptExampleModal()">My prompts</button>
+                            <textarea style="height: 315px;"
+                                placeholder="Describe the main business activities of your company." type="text"
+                                class="form-control" id="promptTextarea" name="prompt" required></textarea>
+                            <button style="font-size: small" type="button" class="btn btn-primary mt-2"
+                                id="savePromptButton" onclick="openSavePromptModal()">Save Prompt</button>
+                            <!-- <button type="button" style="font-size: small" class="btn btn-primary mt-2"
+                                onclick="openGeneratePromptModal()"><i class="fas fa-brain"></i></button> -->
+                        </div>
+
+                        <!-- Generate Prompt Modal -->
+                        <div class="modal" id="generatePromptModal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Generate Prompt</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <label for="generatePromptInput">Enter your topic:</label>
+                                        <input type="text" class="form-control" id="generatePromptInput"
+                                            placeholder="Enter topic">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" id="generateButton"
+                                            onclick="generatePrompt()">Generate</button>
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Save Prompt Modal -->
+                        <div class="modal fade" id="savePromptModal" tabindex="-1"
+                            aria-labelledby="savePromptModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="savePromptModalLabel">Save Prompt</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="promptName">Prompt Name</label>
+                                            <input type="text" class="form-control" id="promptName" name="promptName"
+                                                placeholder="Enter prompt name">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary"
+                                            onclick="savePrompt()">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prompt Example Modal -->
+                        <div class="modal fade" id="promptExampleModal" tabindex="-1"
+                            aria-labelledby="promptExampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="promptExampleModalLabel">My Prompts</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <ul id="promptList" class="list-group">
+                                            <!-- Saved prompts will be dynamically added here -->
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="first_sentence">First Sentence</label>
+                            <input type="text" class="form-control"
+                                placeholder="Enter the first sentence of the conversation." id="first_sentence"
+                                name="first_sentence" required>
+                        </div>
+
+                        <!-- <div class="form-group">
+                            <label for="vectorIdUpdate">Knowledge Base (Vector)</label>
+                            <select class="form-control" id="vectorIdUpdate"
+                                placeholder="Select your Knowledge base (vector)" name="vector_id">
+                            </select>
+                        </div> -->
+
+                        <div class="form-group">
+                            <label for="lang">Language</label>
+                            <select class="form-control" id="lang" name="lang" required>
+                                <option value="en">English</option>
+                                <option value="en-US">English (US)</option>
+                                <option value="en-GB">English (UK)</option>
+                                <option value="en-AU">English (Australia)</option>
+                                <option value="en-NZ">English (New Zealand)</option>
+                                <option value="en-IN">English (India)</option>
+                                <option value="zh">Chinese (Mandarin, Simplified)</option>
+                                <option value="zh-CN">Chinese (Mandarin, Simplified, China)</option>
+                                <option value="zh-Hans">Chinese (Mandarin, Simplified, Hans)</option>
+                                <option value="zh-TW">Chinese (Mandarin, Traditional)</option>
+                                <option value="zh-Hant"> Chinese (Mandarin, Traditional, Hant)</option>
+                                <option value="es">Spanish</option>
+                                <option value="es-419">Spanish (Latin America)</option>
+                                <option value="fr">French</option>
+                                <option value="fr-CA">French (Canada)</option>
+                                <option value="de">German</option>
+                                <option value="el">Greek</option>
+                                <option value="hi">Hindi</option>
+                                <option value="hi-Latn">Hindi (Latin script)</option>
+                                <option value="ja">Japanese</option>
+                                <option value="ko">Korean</option>
+                                <option value="fr-CA">Korean (Korea)</option>
+                                <option value="ms">Malay</option>
+                                <option value="pt">Portuguese</option>
+                                <option value="pt-BR">Portuguese (Brazil)</option>
+                                <option value="it">Italian</option>
+                                <option value="ru">Russian</option>
+                                <option value="sv">Swedish</option>
+                                <option value="sv-SE">Swedish (Sweden)</option>
+                                <option value="id">Indonesian</option>
+                                <option value="tr">Turkish</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="voice">Voice Selection</label>
+                            <select class="form-control" id="voice" name="voice" required>
+                                <option value="ac9e8df3-dfd0-44a0-9cc6-0ecfbdcc6bf1">Jorg (German)</option>
+                                <option value="d6270e19-323c-415a-b48c-c587e98750e2">Stefen (German)</option>
+                                <option value="8e11ef58-7c1f-457d-9a9a-0b0e1e9c96e3">Raju (Hindi)</option>
+                                <option value="6748f93b-0f64-4806-b379-364d56040dfc">Sarah (English)</option>
+                                <option value="e972ebc2-8791-45ca-a0db-382652ed7034">Jhon (English)</option>
+                                <option value="2f9fdbc7-4bf2-4792-8a18-21ce3c93978f">Maya</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="transfer_number">Transfer Call Number</label><br>
+                            <input type="tel" class="form-control" id="transfer_number" name="number" required>
+                        </div>
+
+                        <button style="font-size: small;" type="submit" class="btn btn-primary"
+                            onclick="handleSendCallClick()">Send Call</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            
+            // Fetch existing vectors and populate the dropdown for updating vectors
+            fetch('/get_vectors')
+                .then(response => response.json())
+                .then(data => {
+                    const vectorSelectUpdate = document.getElementById('vectorIdUpdate');
+                    data.forEach(vector => {
+                        const optionUpdate = document.createElement('option');
+                        optionUpdate.value = vector.vector_id; // Adjust according to your vector object structure
+                        optionUpdate.textContent = vector.name; // Adjust according to your vector object structure
+                        vectorSelectUpdate.appendChild(optionUpdate);
+                    });
+                })
+                .catch(error => console.error('Error fetching vectors:', error));
+
+            function openSavePromptModal() {
+                $('#savePromptModal').modal('show');
+            }
+
+            function savePrompt() {
+                const prompt = document.getElementById('promptTextarea').value;
+                const promptName = document.getElementById('promptName').value;
+
+                if (prompt && promptName) {
+                    const promptData = {
+                        name: promptName,
+                        prompt: prompt
+                    };
+
+                    fetch('/save_prompt', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(promptData),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Success:', data);
+                            $('#savePromptModal').modal('hide');
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                }
+            }
+
+            function openPromptExampleModal() {
+                fetch('/get_prompts', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const promptList = document.getElementById('promptList');
+                        promptList.innerHTML = '';
+                        data.prompts.forEach(prompt => {
+                            const listItem = document.createElement('li');
+                            listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+                            listItem.innerHTML = `
+                            <span onclick="fillPrompt('${prompt.name}')">${prompt.name}</span>
+                            <span class="delete-icon" onclick="deletePrompt('${prompt.name}')">&times;</span>
+                        `;
+                            promptList.appendChild(listItem);
+                        });
+                        $('#promptExampleModal').modal('show');
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            }
+
+            function fillPrompt(promptName) {
+                fetch('/get_prompt', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name: promptName }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('promptTextarea').value = data.prompt;
+                        $('#promptExampleModal').modal('hide');
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            }
+
+            function deletePrompt(promptName) {
+                fetch('/delete_prompt', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name: promptName }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Deleted:', data);
+                        openPromptExampleModal();  // Refresh the prompt list
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            }
+
+            function handleSendCallClick() {
+                // Ignore the Prompt Name input when sending a call
+                document.getElementById('promptName').removeAttribute('required');
+            }
+
+            function openGeneratePromptModal() {
+                $('#generatePromptModal').modal('show');
+            }
+
+            function generatePrompt() {
+                const topic = document.getElementById('generatePromptInput').value;
+                const generateButton = document.getElementById('generateButton');
+
+                if (topic.trim() === "") {
+                    alert("Please enter a topic.");
+                    return;
+                }
+
+                // Show spinner on the button
+                generateButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generating...';
+                generateButton.disabled = true;
+
+                fetch('/generate-prompt', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ topic: topic })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('promptTextarea').value = data.prompt;
+                        generateButton.innerHTML = 'Generate';
+                        generateButton.disabled = false;
+                        $('#generatePromptModal').modal('hide');
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        generateButton.innerHTML = 'Generate';
+                        generateButton.disabled = false;
+                    });
+            }
+
+
+            const phoneInputField = document.querySelector("#phone_number");
+        const transferInputField = document.querySelector("#transfer_number");
+
+        // Initialize intl-tel-input for Phone Number
+        const phoneInput = window.intlTelInput(phoneInputField, {
+            initialCountry: "auto",
+            geoIpLookup: function(callback) {
+                fetch('https://ipinfo.io/json', { headers: { 'Accept': 'application/json' } })
+                    .then((resp) => resp.json())
+                    .then((resp) => {
+                        const countryCode = (resp && resp.country) ? resp.country : "us";
+                        callback(countryCode);
+                    });
+            },
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            preferredCountries: ["us", "gb", "ca", "au"],  // Add your preferred countries here
+            separateDialCode: true,
+        });
+
+        // Initialize intl-tel-input for Transfer Number
+        const transferInput = window.intlTelInput(transferInputField, {
+            initialCountry: "auto",
+            geoIpLookup: function(callback) {
+                fetch('https://ipinfo.io/json', { headers: { 'Accept': 'application/json' } })
+                    .then((resp) => resp.json())
+                    .then((resp) => {
+                        const countryCode = (resp && resp.country) ? resp.country : "us";
+                        callback(countryCode);
+                    });
+            },
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+            preferredCountries: ["us", "gb", "ca", "au"],  // Add your preferred countries here
+            separateDialCode: true,
+        });
+
+        function handleSendCallClick() {
+            // Get the full phone number with country code for both fields
+            const phoneNumber = phoneInput.getNumber();
+            const transferNumber = transferInput.getNumber();
+
+            // Update the input field values
+            document.querySelector("#phone_number").value = phoneNumber;
+            document.querySelector("#transfer_number").value = transferNumber;
+
+            document.getElementById('promptName').removeAttribute('required');
+        }
+        </script>
+</body>
+
+</html>

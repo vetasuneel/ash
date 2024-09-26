@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vector Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: white;
+        }
+      
+        .container {
+            max-width: 960px;
+        }
+      
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 20px;
+            border: none;
+        }
+      
+        .card-title {
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+      
+        .form-group {
+            margin-bottom: 15px;
+        }
+      
+        .input-group {
+            border-radius: 5px;
+        }
+      
+        .btn-primary,
+        .btn-danger {
+            background-color: #8906E6;
+            border-color: #8906E6;
+            color: white;
+        }
+      
+        .btn-primary:hover,
+        .btn-danger:hover {
+            background-color: #fff;
+            border-color: #117a8b;
+            color: #CB6CE6;
+        }
+      
+        .btn {
+            font-size: 16px;
+        }
+      
+        .alert {
+            border-radius: 5px;
+            font-size: 14px;
+        }
+      
+        .table {
+            margin-top: 1rem;
+            background-color: white;
+        }
+      
+        .table thead th {
+            background-color: #8906E6;
+            color: white;
+        }
+      
+        .table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+      
+        .form-row {
+            margin-top: 1rem;
+        }
+      
+        #phoneNumbers {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: .25rem;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+      
+        #selectAll {
+            cursor: pointer;
+            background-color: #8906E6;
+            color: white;
+        }
+      
+        .alert {
+            margin-top: 1rem;
+        }
+      
+        .sidebar {
+            background-color: #8906E6;
+            color: white;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+      
+        .sidebar ul {
+            list-style: none;
+            padding-left: 0;
+        }
+      
+        .main {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            background-color: #8906E6;
+            border-radius: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+      
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: #fff;
+            color: #CB6CE6;
+        }
+      
+        .sidebar i {
+            margin-right: 10px;
+            width: 20px;
+        }
+      
+        .sidebar .nav-link {
+            font-weight: 10px;
+            font-size: 14px;
+        }
+      
+        .sidebar-sticky {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+      
+        .nav.flex-column {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+      
+        .spacer {
+            flex-grow: 1;
+        }
+      
+        .sidebar-logo {
+            border-bottom: 1px solid #ddd;
+        }
+      
+        .sidebar-logo img {
+            width: 80%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar position-fixed">
+                <div class="sidebar-sticky">
+                    <div class="sidebar-logo">
+                        <span class="logo" href="{{ url_for('home') }}">
+                            <img src="{{ url_for('static', filename='images/icons/logo.png') }}" alt="Company Logo">
+                        </span>
+                    </div>
+                    <ul class="nav flex-column mt-4">
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('home') }}"><i class="fas fa-plus-square"></i> Create Campaign</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('campaign_details') }}"><i class="fas fa-list"></i> Campaign List</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('batch_details_index') }}"><i class="fas fa-info-circle"></i> Campaign Details</a></li>
+                        <!-- <li class="nav-item"><a class="nav-link main" href="{{ url_for('analyze') }}"><i class="fas fa-brain"></i> AI Analysis</a></li> -->
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('call_jump') }}"><i class="fas fa-phone-alt"></i> Send Call</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('inbound_index') }}"><i class="fas fa-phone-alt"></i> Inbound call</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('call_log') }}"><i class="fas fa-table"></i> Call logs</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('vector_index') }}"><i class="fas fa-plus"></i> Create Vector</a></li>
+                        <li class="nav-item"><a class="nav-link main" href="{{ url_for('vector_update') }}"><i class="fas fa-pen"></i> Update Vector</a></li>
+                        <li class="nav-item"><a class="nav-link main active" href="{{ url_for('list_vectors') }}"><i class="fas fa-list"></i> Vector List</a></li>
+                    </ul>
+                    <!-- Logout link at the bottom -->
+                    <div class="mt-auto">
+                        <ul class="nav flex-column">
+                            <li class="nav-item"><a class="nav-link main" href="{{ url_for('login') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- Main content -->
+            <div class="card col-md-9 ml-sm-auto col-lg-10 main-content">
+                <div class="card-body">
+                    <h2 class="card-title">Vector Details</h2>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Vector ID</th>
+                            <td>{{ vector.vector_id }}</td>
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <td>{{ vector.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td>{{ vector.description }}</td>
+                        </tr>
+                    </table>
+                    <a href="{{ url_for('list_vectors') }}" class="btn btn-primary">Back to List</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

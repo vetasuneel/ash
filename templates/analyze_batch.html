@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Analyze Batch with AI</h2>
+    <form id="analyze-form-ai" action="/analyze_batch_ai" method="post">
+        <div class="form-group">
+            <label for="batch_id">Select Batch ID:</label>
+            <select name="batch_id" id="batch_id">
+                {% for batch_id in batch_ids %}
+                    <option value="{{ batch_id }}">{{ batch_id }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="goal">Goal:</label>
+            <input type="text" class="form-control" id="goal" name="goal" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Questions:</label>
+            <input type="text" class="form-control" name="questions[]" placeholder="Who answered the call? human or voicemail" required>
+            <input type="text" class="form-control" name="questions[]" placeholder="Positive feedback about the product: string" required>
+            <input type="text" class="form-control" name="questions[]" placeholder="Negative feedback about the product: string" required>
+            <input type="text" class="form-control" name="questions[]" placeholder="Customer confirmed they were satisfied: boolean" required>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Analyze Batch</button>
+    </form>
+    <div id="analysis-result" style="display: none;">
+        <h3>Analysis Result</h3>
+        <p>Status: <span id="result-status"></span></p>
+        <p>Message: <span id="result-message"></span></p>
+        <h4>Answers:</h4>
+        <ul id="result-answers"></ul>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#analyze-form-ai').submit(function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+            
+            // Get form data
+            var formData = {
+                'batch_id': $('#batch_id').val(),
+                'goal': $('#goal').val(),
+                'questions': [
+                    $('#question1').val(),
+                    $('#question2').val(),
+                    $('#question3').val(),
+                    $('#question4').val()  // Add question4
+                ]
+            };
+            
+            // Send AJAX request
+            $.ajax({
+                type: 'POST',
+                url: '/analyze_batch_ai',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    // Update the DOM with the analysis result
+                    $('#result-status').text(response.status);
+                    $('#result-message').text(response.message);
+                    // Handle answers list if needed
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+</script>
+
+
+</script>
+{% endblock %}
