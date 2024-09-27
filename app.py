@@ -34,7 +34,6 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # API = "sub-sk-e330a89e-1af5-4695-98de-475e153c8115-8542150e-27ff-4dc0-b910-7f32151a0e39"
 
-# Ashir 
 
 def load_api_key():
     with open('config.json', 'r') as f:
