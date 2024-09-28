@@ -3,9 +3,6 @@
     "builds": [
       { "src": "app.py", "use": "@vercel/python" }
     ],
-    "build": {
-      "command": "pip install --no-cache-dir -r requirements.txt"
-    },
     "routes": [
       { "src": "/(.*)", "dest": "app.py" }
     ]
